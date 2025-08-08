@@ -1,21 +1,43 @@
-//
-//  ContentView.swift
-//  groceryListApp
-//
-//  Created by Javonne Johnson on 8/7/25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var groceries = ["Milk", "Eggs", "Bread"]
+    @State private var newItem = ""
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(groceries, id: \.self) { item in
+                        Text(item)
+                    }
+                    .onDelete(perform: deleteItems)
+                }
+
+                HStack {
+                    TextField("Add new item", text: $newItem)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                    Button("Add") {
+                        addItem()
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+                .padding()
+            }
+            .navigationTitle("🛒 Grocery List")
         }
-        .padding()
+    }
+
+    func addItem() {
+        if !newItem.isEmpty {
+            groceries.append(newItem)
+            newItem = ""
+        }
+    }
+
+    func deleteItems(at offsets: IndexSet) {
+        groceries.remove(atOffsets: offsets)
     }
 }
 
